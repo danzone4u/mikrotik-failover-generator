@@ -10,9 +10,10 @@ export function generateRouterOSv7Script(params: RouterOSConfigParams): string {
   lines.push(`# ======================================================`);
   lines.push(``);
 
-  // 1. Identity
-  lines.push(`# --- 1. SYSTEM IDENTITY ---`);
+  // 1. Identity & Clock
+  lines.push(`# --- 1. SYSTEM IDENTITY & CLOCK ---`);
   lines.push(`/system identity set name="${params.identity}"`);
+  lines.push(`/system clock set time-zone-name="Asia/Jakarta"`);
   lines.push(``);
 
   // 2. DNS
