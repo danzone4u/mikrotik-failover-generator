@@ -33,9 +33,46 @@ export function generateRouterOSv7Script(params: RouterOSConfigParams): string {
   }
   lines.push(``);
 
-  // 4. LAN IP Address
-  lines.push(`# --- 4. LAN IP ADDRESS ---`);
+  // 4. LAN IP Address & DHCP Server
+  lines.push(`# --- 4a. LAN IP ADDRESS ---`);
   lines.push(`/ip address add address=${params.lanIpAddress} interface=${params.lanInterface} comment="LAN"`);
+  lines.push(``);
+
+  // Helper parsing LAN subnet info
+  const parseLanIp = (lanIp: string) => {
+    const rawIp = lanIp.split('/')[0].trim();
+    const parts = rawIp.split('.');
+    if (parts.length === 4) {
+      const prefix = `${parts[0]}.${parts[1]}.${parts[2]}`;
+      const cidr = lanIp.includes('/') ? lanIp.split('/')[1] : '24';
+      return {
+        rawIp,
+        prefix,
+        network: `${prefix}.0/${cidr}`,
+        staticRange: `${prefix}.2-${prefix}.99`,
+        dhcpPoolRange: `${prefix}.100-${prefix}.254`
+      };
+    }
+    return {
+      rawIp: '192.168.88.1',
+      prefix: '192.168.88',
+      network: '192.168.88.0/24',
+      staticRange: '192.168.88.2-192.168.88.99',
+      dhcpPoolRange: '192.168.88.100-192.168.88.254'
+    };
+  };
+
+  const lanInfo = parseLanIp(params.lanIpAddress);
+
+  lines.push(`# --- 4b. DHCP SERVER & POOL LAN ---`);
+  lines.push(`/ip pool add name="pool-lan" ranges=${lanInfo.dhcpPoolRange} comment="LAN"`);
+  lines.push(`/ip dhcp-server add name="dhcp-lan" interface=${params.lanInterface} lease-time=12h address-pool=pool-lan disabled=no comment="LAN"`);
+  lines.push(`/ip dhcp-server network add address=${lanInfo.network} gateway=${lanInfo.rawIp} dns-server=${dnsServers} comment="LAN"`);
+  lines.push(``);
+
+  lines.push(`# --- 4c. QOS TRAFFIC PRIORITY ---`);
+  lines.push(`/queue simple add name="QoS-1-Static-Priority" target=${lanInfo.staticRange} priority=1/1 comment="LAN"`);
+  lines.push(`/queue simple add name="QoS-2-DHCP-Normal" target=${lanInfo.dhcpPoolRange} priority=8/8 comment="LAN"`);
   lines.push(``);
 
   // Helper formatting for IP/Netmask
