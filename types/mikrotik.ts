@@ -18,7 +18,7 @@ export interface RouterOSConfigParams {
   failoverCheckHost1?: string;  // Default: 8.8.8.8
   failoverCheckHost2?: string;  // Default: 1.1.1.1
   lanInterface: string;         // Default: bridge-LAN
-  lanIpAddress: string;         // e.g. "192.168.88.1/24"
+  lanIpAddress: string;         // e.g. "192.168.99.1/24"
   dnsServers?: string;          // e.g. "8.8.8.8,1.1.1.1"
   enableNat: boolean;
   enableFastTrack: boolean;

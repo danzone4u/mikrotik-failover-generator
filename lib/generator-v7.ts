@@ -54,11 +54,11 @@ export function generateRouterOSv7Script(params: RouterOSConfigParams): string {
       };
     }
     return {
-      rawIp: '192.168.88.1',
-      prefix: '192.168.88',
-      network: '192.168.88.0/24',
-      staticRange: '192.168.88.2-192.168.88.99',
-      dhcpPoolRange: '192.168.88.100-192.168.88.254'
+      rawIp: '192.168.99.1',
+      prefix: '192.168.99',
+      network: '192.168.99.0/24',
+      staticRange: '192.168.99.2-192.168.99.99',
+      dhcpPoolRange: '192.168.99.100-192.168.99.254'
     };
   };
 

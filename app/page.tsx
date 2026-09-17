@@ -29,7 +29,7 @@ export default function DashboardPage() {
   const [identity, setIdentity] = useState('ROUTER-MIKROTIK');
   const [adminPassword, setAdminPassword] = useState('');
   const [lanInterface, setLanInterface] = useState('bridge-LAN');
-  const [lanIpAddress, setLanIpAddress] = useState('192.168.88.1/24');
+  const [lanIpAddress, setLanIpAddress] = useState('192.168.99.1/24');
   const [enableNat, setEnableNat] = useState(true);
   const [enableFastTrack, setEnableFastTrack] = useState(true);
 
@@ -146,8 +146,9 @@ export default function DashboardPage() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    const suffix = scriptTab === 'full' ? 'full_v7' : 'failover_only_v7';
-    link.download = `${identity.toLowerCase().replace(/[^a-z0-9_-]/g, '_')}_${suffix}.rsc`;
+    const cleanIdentity = identity.trim().replace(/[^a-zA-Z0-9_-]/g, '_') || 'ROUTER-MIKROTIK';
+    const suffix = scriptTab === 'full' ? '' : '_failover';
+    link.download = `Mikrotik-${cleanIdentity}${suffix}.rsc`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -311,7 +312,7 @@ export default function DashboardPage() {
                   type="text"
                   value={lanIpAddress}
                   onChange={e => setLanIpAddress(e.target.value)}
-                  placeholder="192.168.88.1/24"
+                  placeholder="192.168.99.1/24"
                   className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-slate-600"
                 />
               </div>
