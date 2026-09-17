@@ -71,7 +71,7 @@ export function generateRouterOSv7Script(params: RouterOSConfigParams): string {
   lines.push(``);
 
   lines.push(`# --- 4c. QOS TRAFFIC PRIORITY ---`);
-  lines.push(`/queue simple add name="QoS-1-Static-Priority" target=${lanInfo.staticRange} priority=1/1 comment="LAN"`);
+  lines.push(`/queue simple add name="QoS-1-Static" target=${lanInfo.staticRange} priority=1/1 comment="LAN"`);
   lines.push(`/queue simple add name="QoS-2-DHCP-Normal" target=${lanInfo.dhcpPoolRange} priority=8/8 comment="LAN"`);
   lines.push(``);
 
